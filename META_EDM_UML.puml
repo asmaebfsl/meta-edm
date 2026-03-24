@@ -1,0 +1,812 @@
+@startuml DATA_CATALOG_UML
+
+' ============================================================================
+' MÉTA-MODÈLE UML DATA CATALOG ENTERPRISE 
+' ============================================================================
+
+!define SOURCES_COLOR #E3F2FD
+!define PROCESS_COLOR #FFE082
+!define STORAGE_COLOR #EEEEEE
+!define CORE_COLOR #FFE0B2
+!define METADATA_COLOR #FFF9C4
+!define QUALITY_COLOR #C8E6C9
+!define SECURITY_COLOR #F8BBD0
+!define GOVERNANCE_COLOR #E1BEE7
+!define LINEAGE_COLOR #B2EBF2
+!define CATALOG_COLOR #90CAF9
+!define SEARCH_COLOR #FCE4EC
+!define PROFILING_COLOR #C5E1A5
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam defaultFontSize 11
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 120
+top to bottom direction
+
+title MÉTA-MODÈLE UML EDM : DATA CATALOG ENTERPRISE \n
+
+' ============================================================================
+' PACKAGE 1 : SOURCES DE DONNÉES
+' ============================================================================
+
+package "📦 SOURCES DE DONNÉES" as PKG_SOURCES <<sources>> SOURCES_COLOR {
+    abstract class DataSource {
+        - id: UUID
+        - name: String
+        - sourceType: SourceType
+        - connectionString: String
+        - isActive: Boolean
+        __
+        + connect(): Connection
+        + testConnection(): Boolean
+        + getMetadata(): SourceMetadata
+        + disconnect(): void
+    }
+    
+    class StructuredDataSource {
+        - databaseType: String
+        - schemaName: String
+        - tableCount: Integer
+        __
+        + listTables(): Table[]
+        + executeQuery(sql: String): ResultSet
+    }
+    
+    class SemiStructuredDataSource {
+        - format: String
+        - schemaOnRead: Boolean
+        __
+        + inferSchema(): Schema
+        + validateFormat(): Boolean
+    }
+    
+    class UnstructuredDataSource {
+        - fileType: String
+        - encoding: String
+        __
+        + readContent(): Stream
+        + getFileList(): File[]
+    }
+    
+    DataSource <|-- StructuredDataSource
+    DataSource <|-- SemiStructuredDataSource
+    DataSource <|-- UnstructuredDataSource
+}
+
+' ============================================================================
+' PACKAGE 2 : TRAITEMENT / PROCESS
+' ============================================================================
+
+package "⚙️ TRAITEMENT / PROCESS" as PKG_PROCESS <<process>> PROCESS_COLOR {
+    abstract class Process {
+        - id: UUID
+        - name: String
+        - processType: ProcessType
+        - processingMode: ProcessingMode
+        - schedule: String
+        - status: ProcessStatus
+        __
+        + execute(): ExecutionResult
+        + validate(): ValidationResult
+        + pause(): void
+        + resume(): void
+        + cancel(): void
+        + getLineage(): LineageGraph
+    }
+    
+    class DataPipeline {
+        - pipelineName: String
+        - steps: Step[]
+        - orchestrator: String
+        - dependsOn: Pipeline[]
+        __
+        + addStep(step: Step): void
+        + removeStep(stepId: UUID): void
+        + executeSequential(): Result
+        + executeParallel(): Result
+        + getStepStatus(stepId: UUID): Status
+    }
+    
+    class DataIngestion {
+        - sourceId: UUID
+        - targetId: UUID
+        - ingestionMethod: IngestionMethod
+        - ingestionFrequency: Frequency
+        - lastRunTime: DateTime
+        __
+        + ingest(): Result
+        + validateSource(): Boolean
+        + validateTarget(): Boolean
+        + getStatistics(): IngestionStats
+    }
+    
+    class Transformation {
+        - transformationName: String
+        - inputSchema: Schema
+        - outputSchema: Schema
+        - transformationRules: Rule[]
+        - transformationType: TransformationType
+        __
+        + apply(input: DataSet): DataSet
+        + validate(): Boolean
+        + test(sampleData: DataSet): Result
+    }
+    
+    class StreamingProcess {
+        - streamName: String
+        - streamSource: String
+        - streamTarget: String
+        - processingEngine: String
+        - windowType: WindowType
+        - windowSize: Duration
+        __
+        + startStream(): void
+        + stopStream(): void
+        + processStream(): void
+        + getStreamMetrics(): StreamMetrics
+    }
+    
+    class BatchProcess {
+        - batchName: String
+        - batchSize: Integer
+        - cronExpression: String
+        __
+        + executeBatch(): BatchResult
+        + scheduleBatch(cron: String): void
+    }
+    
+    Process <|-- DataPipeline
+    Process <|-- DataIngestion
+    Process <|-- Transformation
+    Process <|-- StreamingProcess
+    Process <|-- BatchProcess
+    
+    class Job {
+        - id: UUID
+        - processId: UUID
+        - startTime: DateTime
+        - endTime: DateTime
+        - status: JobStatus
+        - recordsProcessed: Long
+        - errorCount: Integer
+        __
+        + start(): void
+        + pause(): void
+        + resume(): void
+        + cancel(): void
+        + getMetrics(): JobMetrics
+        + getLog(): String
+    }
+    
+    Process "1" -- "0..*" Job : executes >
+    
+    enum IngestionMethod {
+        ETL
+        ELT
+        CDC
+        REPLICATION
+        STREAMING
+        VIRTUALIZATION
+        BULK_LOAD
+        INCREMENTAL
+    }
+    
+    enum ProcessingMode {
+        BATCH
+        STREAMING
+        MICRO_BATCH
+        REAL_TIME
+        ON_DEMAND
+        SCHEDULED
+    }
+    
+    enum TransformationType {
+        SQL
+        PYTHON
+        SCALA
+        JAVA
+        DBT
+        SPARK
+        DATAFLOW
+        NO_CODE
+    }
+    
+    enum ProcessType {
+        INGESTION
+        TRANSFORMATION
+        PIPELINE
+        STREAMING
+        BATCH
+        REPLICATION
+    }
+    
+    DataIngestion -- IngestionMethod
+    Process -- ProcessingMode
+    Process -- ProcessType
+    Transformation -- TransformationType
+}
+
+' ============================================================================
+' PACKAGE 3 : STOCKAGE
+' ============================================================================
+
+package "💾 STOCKAGE" as PKG_STORAGE <<storage>> STORAGE_COLOR {
+    class DataStorage {
+        - id: UUID
+        - name: String
+        - storageType: StorageType
+        - location: URI
+        - capacity: Long
+        - usedSpace: Long
+        __
+        + getAvailableSpace(): Long
+        + getUsagePercentage(): Decimal
+        + cleanup(): void
+        + archive(data: DataSet): void
+    }
+    
+    enum StorageType {
+        DATA_LAKE
+        DATA_WAREHOUSE
+        DATA_LAKEHOUSE
+        DATA_MESH
+        OBJECT_STORAGE
+        DATABASE
+        FILE_SYSTEM
+    }
+    
+    DataStorage -- StorageType
+}
+
+' ============================================================================
+' PACKAGE 4 : ACTIFS DE DONNÉES (CORE)
+' ============================================================================
+
+package "⭐ ACTIFS DE DONNÉES (CORE)" as PKG_CORE <<core>> CORE_COLOR {
+    abstract class DataAsset {
+        - id: UUID
+        - name: String
+        - qualifiedName: String
+        - assetType: AssetType
+        - status: AssetStatus
+        - version: Integer
+        - isCertified: Boolean
+        - createdAt: DateTime
+        - updatedAt: DateTime
+        __
+        + {abstract} validate(): Boolean
+        + getMetadata(): Metadata[]
+        + getQuality(): QualityMetrics
+        + getLineage(): LineageGraph
+        + getUpstream(depth: Integer): DataAsset[]
+        + getDownstream(depth: Integer): DataAsset[]
+        + certify(steward: DataSteward): void
+    }
+    
+    class TableAsset {
+        - schemaName: String
+        - tableName: String
+        - rowCount: Long
+        - isPartitioned: Boolean
+        __
+        + validate(): Boolean
+        + getColumns(): ColumnAsset[]
+        + analyze(): TableStatistics
+    }
+    
+    class ColumnAsset {
+        - columnName: String
+        - dataType: DataType
+        - isNullable: Boolean
+        - isPrimaryKey: Boolean
+        __
+        + validate(): Boolean
+        + getTable(): TableAsset
+        + getProfile(): ColumnProfile
+    }
+    
+    class ViewAsset {
+        - viewDefinition: String
+        - isMaterialized: Boolean
+        __
+        + validate(): Boolean
+        + getDependencies(): DataAsset[]
+        + refresh(): void
+    }
+    
+    class FileAsset {
+        - filePath: String
+        - fileFormat: FileFormat
+        - fileSize: Long
+        __
+        + validate(): Boolean
+        + readSample(n: Integer): Record[]
+    }
+    
+    class DatasetAsset {
+        - recordCount: Long
+        - featureCount: Integer
+        __
+        + validate(): Boolean
+        + getStatistics(): DatasetStats
+    }
+    
+    class SchemaAsset {
+        - schemaName: String
+        __
+        + validate(): Boolean
+        + getTables(): TableAsset[]
+    }
+    
+    class ReportAsset {
+        - reportType: ReportType
+        __
+        + validate(): Boolean
+        + generate(): Report
+    }
+    
+    class ApiEndpointAsset {
+        - endpointUrl: URI
+        - httpMethod: HttpMethod
+        __
+        + validate(): Boolean
+        + call(params: Map): Response
+    }
+    
+    DataAsset <|-- TableAsset
+    DataAsset <|-- ColumnAsset
+    DataAsset <|-- ViewAsset
+    DataAsset <|-- FileAsset
+    DataAsset <|-- DatasetAsset
+    DataAsset <|-- SchemaAsset
+    DataAsset <|-- ReportAsset
+    DataAsset <|-- ApiEndpointAsset
+    
+    TableAsset "1" *-- "1..*" ColumnAsset : contains >
+    SchemaAsset "1" *-- "0..*" TableAsset : contains >
+    DataAsset "0..1" o-- "0..*" DataAsset : hierarchy >
+    
+    enum AssetType {
+        TABLE
+        COLUMN
+        VIEW
+        FILE
+        DATASET
+        SCHEMA
+        REPORT
+        API_ENDPOINT
+    }
+    
+    enum AssetStatus {
+        ACTIVE
+        DEPRECATED
+        ARCHIVED
+        DRAFT
+        IN_REVIEW
+        CERTIFIED
+    }
+    
+    DataAsset -- AssetType
+    DataAsset -- AssetStatus
+}
+
+' ============================================================================
+' PACKAGE 5 : MÉTADONNÉES
+' ============================================================================
+
+package "📝 MÉTADONNÉES" as PKG_METADATA <<metadata>> METADATA_COLOR {
+    abstract class Metadata {
+        - id: UUID
+        - assetId: UUID
+        - key: String
+        - value: String
+        - metadataType: MetadataType
+        __
+        + update(newValue: String): void
+        + validate(): Boolean
+    }
+    
+    class TechnicalMetadata {
+        - schemaInfo: Schema
+        __
+        + extractFromSource(): void
+    }
+    
+    class BusinessMetadata {
+        - businessTerm: String
+        __
+        + linkToGlossary(): void
+    }
+    
+    class OperationalMetadata {
+        - lastAccessTime: DateTime
+        - accessCount: Integer
+        __
+        + trackUsage(): void
+    }
+    
+    class DescriptiveMetadata {
+        - title: String
+        - description: String
+        - keywords: String[]
+        __
+        + enrich(): void
+    }
+    
+    Metadata <|-- TechnicalMetadata
+    Metadata <|-- BusinessMetadata
+    Metadata <|-- OperationalMetadata
+    Metadata <|-- DescriptiveMetadata
+}
+
+' ============================================================================
+' PACKAGE 6 : QUALITÉ DES DONNÉES
+' ============================================================================
+
+package "✓ QUALITÉ" as PKG_QUALITY <<quality>> QUALITY_COLOR {
+    class DataQuality {
+        - id: UUID
+        - assetId: UUID
+        - overallScore: Decimal
+        - lastAssessment: DateTime
+        __
+        + calculateScore(): Decimal
+        + getDimensions(): QualityDimension[]
+    }
+    
+    class QualityDimension {
+        - dimensionName: String
+        - score: Decimal
+        - weight: Decimal
+        __
+        + measure(): Decimal
+    }
+    
+    class QualityRule {
+        - ruleName: String
+        - ruleExpression: String
+        - severity: Severity
+        __
+        + evaluate(data: DataSet): RuleResult
+        + fix(data: DataSet): DataSet
+    }
+    
+    class QualityCheck {
+        - checkName: String
+        - checkType: CheckType
+        - threshold: Decimal
+        - lastRunTime: DateTime
+        __
+        + execute(): CheckResult
+    }
+    
+    DataQuality "1" *-- "1..*" QualityDimension : measured by >
+}
+
+' ============================================================================
+' PACKAGE 7 : SÉCURITÉ
+' ============================================================================
+
+package "🔒 SÉCURITÉ" as PKG_SECURITY <<security>> SECURITY_COLOR {
+    class User {
+        - id: UUID
+        - username: String
+        - email: String
+        - isActive: Boolean
+        __
+        + authenticate(): Boolean
+        + getRoles(): Role[]
+    }
+    
+    class Role {
+        - id: UUID
+        - roleName: String
+        - description: String
+        __
+        + getPermissions(): Permission[]
+        + hasPermission(permission: String): Boolean
+    }
+    
+    class Permission {
+        - id: UUID
+        - permissionName: String
+        - resource: String
+        __
+        + grant(user: User): void
+    }
+    
+    class DataSensitivity {
+        - id: UUID
+        - assetId: UUID
+        - sensitivityLevel: SensitivityLevel
+        - classification: Classification
+        __
+        + classify(): Classification
+        + mask(data: DataSet): DataSet
+    }
+    
+    class AccessControl {
+        - id: UUID
+        - assetId: UUID
+        - userId: UUID
+        - accessType: AccessType
+        - grantedAt: DateTime
+        __
+        + revoke(): void
+        + audit(): AuditEntry
+    }
+    
+    User "0..*" -- "0..*" Role : has >
+    Role "0..*" -- "0..*" Permission : grants >
+    
+    ' ✅ CORRECTION 1: Ajout de la relation manquante
+    AccessControl "0..*" -- "1..*" Permission : enforces >
+}
+
+' ============================================================================
+' PACKAGE 8 : GOUVERNANCE
+' ============================================================================
+
+package "⚖️ GOUVERNANCE" as PKG_GOVERNANCE <<governance>> GOVERNANCE_COLOR {
+    class DataOwner {
+        - id: UUID
+        - name: String
+        - department: String
+        - responsibilities: String[]
+        __
+        + approveAccess(request: AccessRequest): Boolean
+        + getOwnedAssets(): DataAsset[]
+    }
+    
+    class DataSteward {
+        - id: UUID
+        - name: String
+        - expertiseDomain: String
+        __
+        + certifyAsset(asset: DataAsset): void
+        + reviewQuality(asset: DataAsset): QualityReport
+    }
+    
+    abstract class DataPolicy {
+        - id: UUID
+        - policyName: String
+        - policyType: PolicyType
+        - rules: PolicyRule[]
+        __
+        + enforce(): EnforcementResult
+        + isApplicable(asset: DataAsset): Boolean
+    }
+    
+    class UsagePolicy {
+        - allowedUses: String[]
+        - restrictions: String[]
+        __
+        + canUseFor(purpose: String): Boolean
+    }
+    
+    class RetentionPolicy {
+        - retentionPeriod: Duration
+        - archiveAfter: Duration
+        __
+        + shouldArchive(asset: DataAsset): Boolean
+        + shouldDelete(asset: DataAsset): Boolean
+    }
+    
+    DataPolicy <|-- UsagePolicy
+    DataPolicy <|-- RetentionPolicy
+}
+
+' ============================================================================
+' PACKAGE 9 : LINEAGE (TRAÇABILITÉ)
+' ============================================================================
+
+package "🔄 LINEAGE" as PKG_LINEAGE <<lineage>> LINEAGE_COLOR {
+    class DataLineage {
+        - id: UUID
+        - assetId: UUID
+        - lineageType: LineageType
+        - nodeCount: Integer
+        - edgeCount: Integer
+        __
+        + getUpstream(depth: Integer): DataAsset[]
+        + getDownstream(depth: Integer): DataAsset[]
+        + getImpactAnalysis(): ImpactReport
+        + visualize(): Graph
+    }
+    
+    class LineageNode {
+        - id: UUID
+        - assetId: UUID
+        - level: Integer
+        - nodeType: NodeType
+        __
+        + getParents(): LineageNode[]
+        + getChildren(): LineageNode[]
+    }
+    
+    class LineageEdge {
+        - id: UUID
+        - sourceNodeId: UUID
+        - targetNodeId: UUID
+        - relationType: RelationType
+        __
+        + getTransformation(): Transformation
+    }
+    
+    class VersionHistory {
+        - id: UUID
+        - assetId: UUID
+        - versionNumber: Integer
+        - changes: String[]
+        __
+        + getDiff(otherVersion: VersionHistory): Diff
+        + restore(): DataAsset
+    }
+    
+    class AuditLog {
+        - id: UUID
+        - entityId: UUID
+        - action: String
+        - timestamp: DateTime
+        - userId: UUID
+        __
+        + getUser(): User
+        + getDiff(): Diff
+    }
+    
+    DataLineage "1" *-- "2..*" LineageNode : contains >
+    LineageNode "1" -- "0..*" LineageEdge : connected by >
+}
+
+' ============================================================================
+' PACKAGE 10 : CATALOGUE
+' ============================================================================
+
+package "📚 CATALOGUE" as PKG_CATALOG <<catalog>> CATALOG_COLOR {
+    class DataCatalog {
+        - id: UUID
+        - name: String
+        - description: String
+        __
+        + search(query: String): CatalogEntry[]
+        + browse(category: String): CatalogEntry[]
+    }
+    
+    class CatalogEntry {
+        - id: UUID
+        - assetId: UUID
+        - title: String
+        - popularity: Integer
+        - rating: Decimal
+        __
+        + view(): void
+        + rate(score: Integer): void
+    }
+    
+    DataCatalog "1" *-- "0..*" CatalogEntry : contains >
+}
+
+' ============================================================================
+' PACKAGE 11 : RECHERCHE
+' ============================================================================
+
+package "🔍 RECHERCHE" as PKG_SEARCH <<search>> SEARCH_COLOR {
+    class Tag {
+        - id: UUID
+        - name: String
+        - category: String
+        __
+        + getAssets(): DataAsset[]
+    }
+    
+    class Glossary {
+        - id: UUID
+        - name: String
+        - domain: String
+        __
+        + getTerms(): GlossaryTerm[]
+    }
+    
+    class GlossaryTerm {
+        - id: UUID
+        - term: String
+        - definition: String
+        - synonyms: String[]
+        __
+        + getRelatedAssets(): DataAsset[]
+    }
+    
+    class SearchIndex {
+        - id: UUID
+        - indexName: String
+        __
+        + search(query: String): SearchResult[]
+        + rebuild(): void
+    }
+    
+    Glossary "1" *-- "0..*" GlossaryTerm : defines >
+    Tag "0..*" -- "1" SearchIndex : indexed in >
+    Tag "0..*" -- "0..*" GlossaryTerm : related to >
+}
+
+' ============================================================================
+' PACKAGE 12 : PROFILING
+' ============================================================================
+
+package "📊 PROFILING" as PKG_PROFILING <<profiling>> PROFILING_COLOR {
+    class DataProfile {
+        - id: UUID
+        - assetId: UUID
+        - rowCount: Long
+        - profileDate: DateTime
+        __
+        + regenerate(): void
+        + getStatistics(): Statistics
+    }
+    
+    class ColumnProfile {
+        - id: UUID
+        - columnName: String
+        - distinctCount: Long
+        - nullCount: Long
+        __
+        + getSampleValues(): String[]
+        + getDistribution(): Distribution
+    }
+    
+    DataProfile "1" *-- "1..*" ColumnProfile : analyzes >
+}
+
+' ============================================================================
+' RELATIONS INTER-PACKAGES
+' ============================================================================
+
+' Flèches cachées pour organisation top-down
+PKG_SOURCES -[hidden]down-> PKG_PROCESS
+PKG_PROCESS -[hidden]down-> PKG_STORAGE
+PKG_STORAGE -[hidden]down-> PKG_CORE
+PKG_CORE -[hidden]down-> PKG_METADATA
+PKG_METADATA -[hidden]down-> PKG_QUALITY
+PKG_QUALITY -[hidden]down-> PKG_SECURITY
+PKG_SECURITY -[hidden]down-> PKG_GOVERNANCE
+PKG_GOVERNANCE -[hidden]down-> PKG_LINEAGE
+PKG_LINEAGE -[hidden]down-> PKG_CATALOG
+PKG_CATALOG -[hidden]right-> PKG_SEARCH
+PKG_SEARCH -[hidden]right-> PKG_PROFILING
+
+' Relations principales
+DataSource "1" -- "0..*" Process : consumed by >
+
+' ✅ CORRECTION 2: Clarification Process ↔ Storage avec 2 relations distinctes
+Process "0..*" -- "0..*" DataStorage : reads from >
+Process "0..*" -- "1..*" DataStorage : writes to >
+
+DataStorage "1" -- "0..*" DataAsset : contains >
+Process "0..*" -- "0..*" DataAsset : produces >
+DataAsset "1" -- "0..*" Metadata : described by >
+DataAsset "1" -- "0..1" DataQuality : assessed by >
+DataAsset "1" -- "0..1" DataSensitivity : classified as >
+DataAsset "0..*" -- "0..*" DataOwner : owned by >
+DataAsset "0..*" -- "0..*" DataSteward : stewarded by >
+DataAsset "1" -- "0..1" DataLineage : traced by >
+DataAsset "1" -- "0..*" VersionHistory : versioned by >
+DataAsset "1" -- "0..*" AuditLog : audited in >
+Process "1" -- "0..*" LineageNode : generates >
+DataAsset "1" -- "0..*" CatalogEntry : catalogued as >
+DataAsset "0..*" -- "0..*" Tag : tagged with >
+DataAsset "0..*" -- "0..*" GlossaryTerm : defined by >
+DataAsset "1" -- "0..1" DataProfile : profiled by >
+User "0..*" -- "0..*" DataAsset : accesses >
+DataOwner "1" -- "1" User : is a >
+DataSteward "1" -- "1" User : is a >
+DataAsset "1" -- "0..*" AccessControl : controlled by >
+DataAsset "1" -- "0..*" QualityCheck : checked by >
+CatalogEntry "0..*" -- "1" SearchIndex : indexed in >
+DataAsset "0..*" -- "1" SearchIndex : indexed in >
+
+' 
+
+@enduml
