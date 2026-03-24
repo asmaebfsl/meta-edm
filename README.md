@@ -59,7 +59,8 @@ Validated through a multi-method Design Science Research approach combining expe
 ## Complete UML Meta-Model (Figure 4)
 
 The diagram below presents the complete META-EDM across all 12 domains, their classes, attributes, methods, and inter-package relationships.
-[![META-EDM Complete UML Meta-Model](figures/EDM_METAMODEL_UML.svg)](figures/EDM_METAMODEL_UML.svg)
+
+![META-EDM Complete UML Meta-Model](figures/EDM_METAMODEL_UML.svg)
 
 
 > **Figure 4.** META-EDM Enterprise Data Catalog Meta-Model — Full UML Class Diagram.
