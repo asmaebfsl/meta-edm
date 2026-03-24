@@ -60,9 +60,9 @@ Validated through a multi-method Design Science Research approach combining expe
 
 The diagram below presents the complete META-EDM across all 12 domains, their classes, attributes, methods, and inter-package relationships.
 
-!['META-EDM Enterprise Data Catalog Meta-Model'](figures/EDM_METAMODEL_UML.svg)
+![META-EDM Complete UML Meta-Model](figures/EDM_METAM.svg)
 
-> META-EDM Enterprise Data Catalog Meta-Model — Full UML Class Diagram.
+> **Figure 4.** META-EDM Enterprise Data Catalog Meta-Model — Full UML Class Diagram.
 > *12 packages · 70+ classes · 7 enumerations · Complete inter-domain dependency model.*
 
 📐 **Editable UML source:** [`uml/META_EDM_UML.puml`](uml/META_EDM_UML.puml)
@@ -201,7 +201,7 @@ meta-edm/
 ├── README.md
 │
 ├── figures/
-│   ├── EDM_METAM.svg                         ← Complete UML meta-model
+│   ├── EDM_METAM.svg                         ← Figure 4: Complete UML meta-model
 │   │
 │   └── appendix_a/                           ← Appendix A: Domain-level diagrams
 │       ├── figA1_D1_data_sources.png
