@@ -4,8 +4,6 @@
 ## A Validated Meta-Model for Enterprise Data Management  
 ### with Data Catalog Hub Architecture
 
-[![Status](https://img.shields.io/badge/Status-Under%20Review-orange?style=flat-square)](https://www.sciencedirect.com/journal/international-journal-of-information-management)
-[![Journal](https://img.shields.io/badge/Journal-IJIM%20%7C%20Elsevier-blue?style=flat-square)](https://www.sciencedirect.com/journal/international-journal-of-information-management)
 [![Method](https://img.shields.io/badge/Method-Design%20Science%20Research-green?style=flat-square)](#methodology)
 [![Validation](https://img.shields.io/badge/Validation-N%3D262%20(Delphi%20%2B%20Survey)-purple?style=flat-square)](#empirical-validation)
 [![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey?style=flat-square)](https://creativecommons.org/licenses/by/4.0/)
