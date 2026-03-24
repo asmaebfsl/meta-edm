@@ -76,7 +76,7 @@ META-EDM proposes **twelve domains** organized into **four hierarchical layers**
 > **Figure 4.** META-EDM Enterprise Data Catalog Meta-Model — Full UML Class Diagram  
 > *12 packages · 70+ classes with methods · 7 enumerations · Complete inter-domain relationships*
 
-📥 **PlantUML source (editable):** [`uml/META_EDM_UML_V4.puml`](uml/META_EDM_UML_V4.puml)
+📥 **PlantUML source (editable):** [`uml/META_EDM_UML.puml`](uml/META_EDM_UML.puml)
 
 ---
 
@@ -114,10 +114,7 @@ meta-edm/
 ├── README.md
 │
 ├── figures/
-│   ├── fig1_publications_temporal.png
-│   ├── fig2_dsr_process.png
-│   ├── fig3_four_layer_architecture.png
-│   ├── fig4_full_uml_metamodel.png          ← Complete meta-model ★
+│   ├── fig_full_uml_metamodel.png          ← Complete meta-model 
 │   │
 │   └── appendix_a/                          ← Domain-level UML diagrams
 │       ├── figA1_D1_data_sources.png
@@ -134,7 +131,7 @@ meta-edm/
 │       └── figA12_D12_data_profiling.png
 │
 └── uml/
-    └── META_EDM_UML_V4.puml                 ← PlantUML source
+    └── META_EDM_UML.puml                 ← PlantUML source
 ```
 
 ---
