@@ -69,7 +69,7 @@ The diagram below presents the complete META-EDM across all 12 domains, their cl
 
 ---
 
-## Domain Specifications (Appendix A)
+## Domain Specifications (Appendix)
 
 Each domain is formally specified as a UML class diagram. The twelve domains are organized by architectural layer.
 
@@ -80,28 +80,28 @@ Each domain is formally specified as a UML class diagram. The twelve domains are
 #### D1 — Data Sources
 Manages all external and internal data origins (structured, semi-structured, unstructured).
 
-![D1 Data Sources](figures/appendix_a/figA1_D1_data_sources.png)
+![D1 Data Sources](figures/appendix/figA1_D1_data_sources.png)
 
 ---
 
 #### D2 — Data Processing
 Covers ingestion pipelines, transformations, batch and streaming processes.
 
-![D2 Data Processing](figures/appendix_a/figA2_D2_data_processing.png)
+![D2 Data Processing](figures/appendix/D2_Data_Processing.svg)
 
 ---
 
 #### D3 — Data Storage
 Manages storage infrastructure: data lakes, warehouses, lakehouses, and object storage.
 
-![D3 Data Storage](figures/appendix_a/figA3_D3_data_storage.png)
+![D3 Data Storage](figures/appendix/D3_Data_Storage.svg)
 
 ---
 
 #### D4 — Core Data Assets
 Central abstraction layer defining all typed data assets (tables, columns, files, datasets, APIs).
 
-![D4 Core Data Assets](figures/appendix_a/figA4_D4_core_assets.png)
+![D4 Core Data Assets](figures/appendix/D4_Core_Data_Assets.svg)
 
 ---
 
@@ -110,28 +110,28 @@ Central abstraction layer defining all typed data assets (tables, columns, files
 #### D5 — Metadata
 Captures technical, business, operational, and descriptive metadata for all data assets.
 
-![D5 Metadata](figures/appendix_a/figA5_D5_metadata.png)
+![D5 Metadata](figures/appendix/D5_Metadata.svg)
 
 ---
 
 #### D6 — Data Quality
 Defines quality dimensions, rules, and automated checks applied across the data ecosystem.
 
-![D6 Data Quality](figures/appendix_a/figA6_D6_data_quality.png)
+![D6 Data Quality](figures/appendix/D6_Data_Quality.svg)
 
 ---
 
 #### D7 — Data Security
 Manages access control, sensitivity classification, roles, permissions, and audit trails.
 
-![D7 Data Security](figures/appendix_a/figA7_D7_data_security.png)
+![D7 Data Security](figures/appendix/D7_Data_Security.svg)
 
 ---
 
 #### D12 — Data Profiling
 Provides statistical analysis and column-level profiling to support quality and discovery.
 
-![D12 Data Profiling](figures/appendix_a/figA12_D12_data_profiling.png)
+![D12 Data Profiling](figures/appendix/D12_Data_Profiling.svg)
 
 ---
 
@@ -140,14 +140,14 @@ Provides statistical analysis and column-level profiling to support quality and 
 #### D8 — Data Governance
 Defines ownership, stewardship, policies (usage, retention), and compliance enforcement.
 
-![D8 Data Governance](figures/appendix_a/figA8_D8_data_governance.png)
+![D8 Data Governance](figures/appendix/D8_Data_Governance.svg)
 
 ---
 
 #### D9 — Data Lineage
 Tracks provenance, transformation history, version control, and impact analysis across assets.
 
-![D9 Data Lineage](figures/appendix_a/figA9_D9_data_lineage.png)
+![D9 Data Lineage](figures/appendix/D9_Data_Lineage.svg)
 
 ---
 
@@ -156,14 +156,14 @@ Tracks provenance, transformation history, version control, and impact analysis 
 #### D10 — Data Catalog
 Hub domain aggregating outputs from nine upstream domains to enable enterprise data discovery.
 
-![D10 Data Catalog](figures/appendix_a/figA10_D10_data_catalog.png)
+![D10 Data Catalog](figures/appendix/D10_Data_Catalog.svg)
 
 ---
 
 #### D11 — Data Search
 Provides full-text indexing, tagging, glossary management, and semantic search capabilities.
 
-![D11 Data Search](figures/appendix_a/figA11_D11_data_search.png)
+![D11 Data Search](figures/appendix/D11_Data_Search.svg)
 
 ---
 
@@ -201,21 +201,21 @@ meta-edm/
 ├── README.md
 │
 ├── figures/
-│   ├── EDM_METAM.svg                         ← Complete UML meta-model
+│   ├── EDM_META.svg                         ← Complete UML meta-model
 │   │
 │   └── appendix/                           ← Appendix: Domain-level diagrams
-│       ├── figA1_D1_data_sources.png
-│       ├── figA2_D2_data_processing.png
-│       ├── figA3_D3_data_storage.png
-│       ├── figA4_D4_core_assets.png
-│       ├── figA5_D5_metadata.png
-│       ├── figA6_D6_data_quality.png
-│       ├── figA7_D7_data_security.png
-│       ├── figA8_D8_data_governance.png
-│       ├── figA9_D9_data_lineage.png
-│       ├── figA10_D10_data_catalog.png
-│       ├── figA11_D11_data_search.png
-│       └── figA12_D12_data_profiling.png
+│       ├── fig1_D1_data_sources.png
+│       ├── fig2_D2_data_processing.png
+│       ├── fig3_D3_data_storage.png
+│       ├── fig4_D4_core_assets.png
+│       ├── fig5_D5_metadata.png
+│       ├── fig6_D6_data_quality.png
+│       ├── fig7_D7_data_security.png
+│       ├── fig8_D8_data_governance.png
+│       ├── fig9_D9_data_lineage.png
+│       ├── fig10_D10_data_catalog.png
+│       ├── fig11_D11_data_search.png
+│       └── fig12_D12_data_profiling.png
 │
 └── uml/
     └── META_EDM_UML.puml                     ← PlantUML editable source
