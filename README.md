@@ -80,7 +80,7 @@ Each domain is formally specified as a UML class diagram. The twelve domains are
 #### D1 — Data Sources
 Manages all external and internal data origins (structured, semi-structured, unstructured).
 
-![D1 Data Sources](figures/appendix/figA1_D1_data_sources.png)
+![D1 Data Sources](figures/appendix/figA1_D1_data_sources.svg)
 
 ---
 
