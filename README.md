@@ -1,123 +1,184 @@
+<div align="center">
+
 # META-EDM
 
-**A Validated Meta-Model for Enterprise Data Management  
-with Data Catalog Hub Architecture**
+### A Validated Meta-Model for Enterprise Data Management
+### with Data Catalog Hub Architecture
 
-*Supplementary research materials — full-resolution UML figures  
-and editable PlantUML source files*
+<p>
+  <img src="https://img.shields.io/badge/Method-Design%20Science%20Research-2E86AB?style=for-the-badge" alt="DSR"/>
+  <img src="https://img.shields.io/badge/Delphi-N%3D15%20Experts-8B5CF6?style=for-the-badge" alt="N=15"/>
+  <img src="https://img.shields.io/badge/Survey-N%3D247%20Practitioners-8B5CF6?style=for-the-badge" alt="N=247"/>
+  <img src="https://img.shields.io/badge/Domains-12-F59E0B?style=for-the-badge" alt="12 Domains"/>
+  <img src="https://img.shields.io/badge/Dependencies-47-16A34A?style=for-the-badge" alt="47 Dependencies"/>
+  <img src="https://img.shields.io/badge/License-CC%20BY%204.0-6B7280?style=for-the-badge" alt="License"/>
+</p>
 
----
+*Supplementary research materials — full-resolution figures and UML source files*
 
-## What this repository contains
-
-This repository holds the complete set of figures and source files
-supporting the META-EDM research paper. The paper develops a
-theoretically grounded meta-model for enterprise data management,
-organizes twelve domains across four architectural layers, and
-formally characterizes the data catalog as a structural hub —
-a claim validated through two independent empirical studies.
-
-All figures are provided in scalable vector format (.svg) and
-as high-resolution rasters (≥ 300 dpi), meeting publication
-artwork standards.
+</div>
 
 ---
 
-## Research questions
+## Overview
 
-The paper addresses three questions that existing EDM frameworks
-leave unanswered:
+Enterprise data management lacks explicit theoretical foundations
+for domain decomposition and formalized structural
+interdependencies. This research develops **META-EDM**, a
+theoretically grounded meta-model comprising **twelve domains**
+organized in **four hierarchical layers**, with dependencies
+formalized through **modularity theory** and **Dependency
+Structure Matrix (DSM) methodology**.
 
-- What domains are genuinely necessary and sufficient for enterprise
-  data management, and what principles justify their boundaries?
-- How are these domains structurally interdependent, and what does
-  that mean for implementation sequencing?
-- Does the data catalog occupy a structurally distinct position
-  within the EDM ecosystem — and if so, what are the implications?
+Validated through a multi-method Design Science Research approach
+combining an expert Delphi study (N=15, three rounds) and a
+large-scale practitioner survey (N=247).
 
 ---
 
-## The META-EDM architecture
+## Research Questions
 
-Twelve domains organized across four layers, with dependencies
-flowing upward from infrastructure toward discovery:
+| | Question |
+|:---:|---|
+| **RQ1** | What are the necessary and sufficient domains of enterprise data management, and what theoretical principles govern their decomposition? |
+| **RQ2** | How are EDM domains structurally interdependent, and how do these dependencies inform architectural design and implementation sequencing? |
+| **RQ3** | What is the structural role of the data catalog within the EDM ecosystem, and does it function as an architectural hub? |
+
+---
+
+## META-EDM Four-Layer Architecture
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Layer 4 — Discovery       D10: Data Catalog   D11: Search  │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 3 — Orchestration   D8: Governance      D9: Lineage  │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 2 — Enrichment      D5: Metadata        D6: Quality  │
-│                             D7: Security        D12: Profiling│
-├─────────────────────────────────────────────────────────────┤
-│  Layer 1 — Foundation      D1: Sources         D2: Processing│
-│                             D3: Storage         D4: Core Assets│
-└─────────────────────────────────────────────────────────────┘
+╔══════════════════════════════════════════════════════════════════╗
+║  LAYER 4 — DISCOVERY       D10: Data Catalog    D11: Search     ║
+╠══════════════════════════════════════════════════════════════════╣
+║  LAYER 3 — ORCHESTRATION   D8: Governance       D9: Lineage     ║
+╠══════════════════════════════════════════════════════════════════╣
+║  LAYER 2 — ENRICHMENT      D5: Metadata         D6: Quality     ║
+║                             D7: Security         D12: Profiling  ║
+╠══════════════════════════════════════════════════════════════════╣
+║  LAYER 1 — FOUNDATION      D1: Sources          D2: Processing  ║
+║                             D3: Storage          D4: Core Assets ║
+╚══════════════════════════════════════════════════════════════════╝
+                       ▲ Dependencies flow upward
 ```
 
-The dependency structure matrix (12×12) captures 47 directional
-relationships among the 132 possible domain pairs — a density of
-35.6%. The matrix is strictly acyclic when domains are ordered
-by layer, which allows phased deployment without circular
-activation requirements.
+The dependency structure matrix captures **47 directional
+relationships** among 132 possible domain pairs (35.6% density).
+The matrix is strictly acyclic when domains are ordered by layer,
+enabling phased deployment without circular activation
+requirements.
 
-D10 (Data Catalog) draws inputs from nine upstream domains while
-feeding only one downstream consumer. No other domain in the model
-shows a comparable asymmetry. D4 (Core Data Assets) has the highest
-fan-out, with eight domains depending on it — making it the primary
-architectural integration point.
+**Key structural findings:**
+
+- **D10 (Data Catalog)** draws inputs from nine upstream domains
+  while providing output to only one downstream consumer — a 9:1
+  asymmetry unmatched by any other domain in the model.
+- **D4 (Core Data Assets)** shows the highest fan-out (8
+  consuming domains), making it the primary architectural
+  integration point.
+- **D11 (Data Search)** is a terminal node: it consumes from the
+  catalog but feeds nothing downstream.
 
 ---
 
-## Validation overview
+## Complete UML Meta-Model
 
-The meta-model was validated through two independent studies
-conducted in parallel.
+**[View full UML diagram →](figures/EDM_METAMODEL_UML.svg)**
 
-**Expert Delphi study — N=15 specialists, three rounds**
+> META-EDM Enterprise Data Catalog Meta-Model — Full UML Class
+> Diagram. All 12 domains, inter-package relationships, and
+> dependency flows.
 
-Experts assessed domain necessity and dependency validity across
-three structured rounds, with full participant retention throughout.
+📐 **Editable PlantUML source:** [`uml/META_EDM_UML.puml`](uml/META_EDM_UML.puml)
+
+---
+
+## Domain Specifications (Appendix)
+
+Each domain is formally specified as a UML class diagram,
+organized by architectural layer.
+
+### Layer 1 — Foundation
+
+| Domain | Figure | Description |
+|---|---|---|
+| D1 — Data Sources | [Fig. A.1 →](figures/appendix/figA1_D1_data_sources.svg) | All external and internal data origins (structured, semi-structured, unstructured) |
+| D2 — Data Processing | [Fig. A.2 →](figures/appendix/D2_Data_Processing.svg) | Ingestion pipelines, transformations, batch and streaming processes |
+| D3 — Data Storage | [Fig. A.3 →](figures/appendix/D3_Data_Storage.svg) | Storage infrastructure: lakes, warehouses, lakehouses, object storage |
+| D4 — Core Data Assets | [Fig. A.4 →](figures/appendix/D4_Core_Data_Assets.svg) | Central abstraction layer defining all typed data assets |
+
+### Layer 2 — Enrichment
+
+| Domain | Figure | Description |
+|---|---|---|
+| D5 — Metadata | [Fig. A.5 →](figures/appendix/D5_Metadata.svg) | Technical, business, operational, and custom metadata |
+| D6 — Data Quality | [Fig. A.6 →](figures/appendix/D6_Data_Quality.svg) | Quality dimensions, rules, and automated checks (ISO 25012) |
+| D7 — Data Security | [Fig. A.7 →](figures/appendix/D7_Data_Security.svg) | Access control, sensitivity classification, roles, audit trails |
+| D12 — Data Profiling | [Fig. A.8 →](figures/appendix/D12_Data_Profiling.svg) | Statistical analysis and column-level profiling |
+
+### Layer 3 — Orchestration
+
+| Domain | Figure | Description |
+|---|---|---|
+| D8 — Data Governance | [Fig. A.9 →](figures/appendix/D8_Data_Governance.svg) | Ownership, stewardship, policies, compliance enforcement |
+| D9 — Data Lineage | [Fig. A.10 →](figures/appendix/D9_Data_Lineage.svg) | Provenance, transformation history, impact analysis |
+
+### Layer 4 — Discovery
+
+| Domain | Figure | Description |
+|---|---|---|
+| D10 — Data Catalog | [Fig. A.11 →](figures/appendix/D10_Data_Catalog.svg) | Hub domain aggregating nine upstream domains for enterprise discovery |
+| D11 — Data Search | [Fig. A.12 →](figures/appendix/D11_Data_Search.svg) | Full-text indexing, semantic search, glossary management |
+
+---
+
+## Empirical Validation Results
+
+### Expert Delphi Study — N=15 specialists, 3 rounds
 
 | Criterion | Result |
-|---|---|
-| Domain necessity consensus (overall) | 84.0% |
-| Dependency structure agreement | 91.2% |
-| Invalid dependencies identified | 0 out of 47 |
-| Total dependency judgments | 705 (47 deps × 15 experts) |
+|---|:---:|
+| Domain necessity consensus (overall) | **84.0%** |
+| Dependency structure agreement | **91.2%** |
+| Invalid dependencies identified | **0 / 47** |
+| Total dependency judgments | **705** *(47 deps × 15 experts)* |
 
-**Practitioner survey — N=247 professionals**
+All twelve domains achieved necessity scores above 4.0/5.0 across
+all three rounds, with consensus strengthening progressively from
+round one to round three.
 
-Respondents spanned large enterprises (32%), financial services
-(28%), healthcare (23%), and other sectors (17%).
+### Practitioner Survey — N=247 professionals
+
+Sample: large enterprises (32%), financial services (28%),
+healthcare (23%), other sectors (17%).
 
 | Finding | Result |
-|---|---|
-| Dependency confirmation rate | 87.8% |
-| Catalog satisfaction ↔ upstream maturity | r = 0.74, p < 0.001 |
-| Satisfaction gap: mature vs. premature deployment | 3.7× (Cohen's d = 3.8) |
-| Maturity: consistent vs. inconsistent sequences | 2.3× higher |
-| Stakeholder satisfaction: same comparison | 1.9× higher |
+|---|:---:|
+| Dependency confirmation rate | **87.8%** |
+| Catalog satisfaction ↔ upstream maturity | **r = 0.74** *(p < 0.001)* |
+| Satisfaction: mature vs. premature deployment | **3.7× higher** *(Cohen's d = 3.8)* |
+| Maturity: consistent vs. inconsistent sequences | **2.3× higher** |
+| Stakeholder satisfaction: same comparison | **1.9× higher** |
 
-**Cross-method convergence**
+### Cross-Method Triangulation
 
 Expert and practitioner dependency confirmation rates differ by
-3.4 percentage points (91.2% vs. 87.8%), confirming that the
-dependency structure holds across both populations and evaluation
-methods.
+only **3.4 percentage points** (91.2% vs. 87.8%), confirming
+strong convergent validity across independent methods and
+stakeholder populations.
 
 ---
 
-## Repository structure
+## Repository Structure
 ```
 meta-edm/
 │
 ├── README.md
 │
 ├── figures/
-│   ├── EDM_METAMODEL_UML.svg          ← Complete meta-model (all 12 domains)
+│   ├── EDM_METAMODEL_UML.svg              ← Complete UML meta-model
 │   │
-│   └── appendix/
+│   └── appendix/                          ← Domain-level diagrams
 │       ├── figA1_D1_data_sources.svg
 │       ├── D2_Data_Processing.svg
 │       ├── D3_Data_Storage.svg
@@ -132,22 +193,21 @@ meta-edm/
 │       └── D12_Data_Profiling.svg
 │
 └── uml/
-    └── META_EDM_UML.puml              ← Editable PlantUML source
+    └── META_EDM_UML.puml                  ← PlantUML editable source
 ```
 
 ---
 
-## Rendering the UML source locally
+## Rendering the UML Source
 ```bash
-# PNG at 300 dpi
+# High-resolution PNG (300 dpi)
 plantuml -tpng -Sdpi=300 uml/META_EDM_UML.puml
 
-# Scalable vector
+# Scalable vector (SVG)
 plantuml -tsvg uml/META_EDM_UML.puml
 ```
 
-Online rendering is also available at
-[plantuml.com/plantuml](https://www.plantuml.com/plantuml).
+Online rendering: [plantuml.com/plantuml](https://www.plantuml.com/plantuml)
 
 ---
 
@@ -155,5 +215,15 @@ Online rendering is also available at
 
 Released under **Creative Commons Attribution 4.0 International
 (CC BY 4.0)**. You are free to share and adapt these materials
-provided appropriate attribution is given.
+with appropriate attribution.
 
+[![CC BY 4.0](https://licensebuttons.net/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+---
+
+<div align="center">
+<sub>
+All figures meet publication artwork standards (≥ 300 dpi) ·
+Author information withheld pending peer review
+</sub>
+</div>
